@@ -8,7 +8,7 @@ public class CasseBrique extends Canvas implements KeyListener {
     public static final int width = 500;
     public static final int height = 700;
 
-    public Balle balle = new Balle(235,600,Color.black,1,1,30);
+    public Balle balle = new Balle(235,600,Color.black,7,5,30);
     public Barre barre = new Barre(215,670,Color.red,5,10,70);
 
     public CasseBrique() throws InterruptedException {
@@ -53,20 +53,17 @@ public class CasseBrique extends Canvas implements KeyListener {
             balle.deplacement();
             balle.rebond();
 
-            System.out.println("Position x : " + balle.getPosX());
-            System.out.println("Position y : " + balle.getPosY());
-            System.out.println("Position Y barre : " + barre.getPosY());
+            boolean collissionY = balle.getPosY() + balle.getDiametre() == barre.getPosY();
 
-
-            if (balle.getPosY() + balle.getDiametre() == barre.getPosY()){
-                System.out.println("Touché");
+            if (collissionY && (balle.getPosX() + balle.getDiametre() >= barre.getPosX() && balle.getPosX() < barre.getPosX() + barre.getWidth())){
+                balle.setVitesseY(-balle.getVitesseY());
             }
 
             /* Fin program */
 
             dessin.dispose();
             getBufferStrategy().show();
-            Thread.sleep(1000 / 10);
+            Thread.sleep(1000 / 60);
         }
     }
 
