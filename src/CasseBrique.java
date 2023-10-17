@@ -8,13 +8,13 @@ public class CasseBrique extends Canvas implements KeyListener {
     public static final int width = 500;
     public static final int height = 700;
 
-    public Balle balle = new Balle(235,600,Color.black,7,5,30);
-    public Barre barre = new Barre(215,670,Color.red,5,10,70);
+    protected Balle balle = new Balle(235,600,Color.black,7,5,30);
+    protected Barre barre = new Barre(215,670,Color.red,5,0,10,70);
 
     public CasseBrique() throws InterruptedException {
 
-        setSize(width,height);
-        setBounds(0,0,width,height);
+        this.setSize(width,height);
+        this.setBounds(0,0,width,height);
 
 
         JFrame fenetre = new JFrame();
@@ -35,33 +35,34 @@ public class CasseBrique extends Canvas implements KeyListener {
         this.setIgnoreRepaint(true);
         this.setFocusable(false);
 
-        this.demarrer();
+        this.start();
     }
-    public void demarrer() throws InterruptedException {
-        while (true) {
+    public void start() throws InterruptedException {
 
-            Graphics2D dessin = (Graphics2D) getBufferStrategy().getDrawGraphics();
+        while (true) {
+            Graphics2D draw = (Graphics2D) getBufferStrategy().getDrawGraphics();
 
             /* Program */
+            draw.setColor(Color.white);
+            draw.fillRect(0,0,width,height);
 
-            dessin.setColor(Color.white);
-            dessin.fillRect(0,0,width,height);
-
-            balle.dessiner(dessin);
-            barre.dessiner(dessin);
+            balle.dessiner(draw);
+            barre.dessiner(draw);
 
             balle.deplacement();
             balle.rebond();
 
             boolean collissionY = balle.getPosY() + balle.getDiametre() == barre.getPosY();
+            boolean collissionDebutBarre = balle.getPosX() + balle.getDiametre() >= barre.getPosX();
+            boolean collissionFinBarre = balle.getPosX() < barre.getPosX() + barre.getWidth();
 
-            if (collissionY && (balle.getPosX() + balle.getDiametre() >= barre.getPosX() && balle.getPosX() < barre.getPosX() + barre.getWidth())){
+            if (collissionY && (collissionDebutBarre && collissionFinBarre)) {
                 balle.setVitesseY(-balle.getVitesseY());
             }
 
             /* Fin program */
 
-            dessin.dispose();
+            draw.dispose();
             getBufferStrategy().show();
             Thread.sleep(1000 / 60);
         }
